@@ -12,10 +12,11 @@ namespace cli
 
         public static async Task<int> Main(string[] args)
         {
-            return await Parser.Default.ParseArguments<StoreOption, FetchOption>(args)
+            return await Parser.Default.ParseArguments<StoreOption, FetchOption, DeleteOption>(args)
                 .MapResult(
                     async (StoreOption opts) => await Store(opts),
                     async (FetchOption opts) => await Fetch(opts),
+                    async (DeleteOption opts) => await Delete(opts),
                     _ => Task.FromResult(1));
         }
 
@@ -28,14 +29,15 @@ namespace cli
             return await new CredentialCommand().Delete(opts.Target);
         }
 
-        private static async Task<int> Exists(IOption opts)
-        {
-            return await new CredentialCommand().Exists(opts.Target) ? 0 : 1;
-        }
-
         private static async Task<int> Fetch(IOption opts)
         {
             var credentials = await new CredentialCommand().Fetch(opts.Target);
+            if (credentials == null)
+            {
+                Console.WriteLine($"Target {opts.Target} does not exist");
+                return 1;
+            }
+
             Console.WriteLine($"{credentials.UserName} {credentials.Password}");
             return await Task.FromResult(0);
         }

@@ -8,7 +8,7 @@ namespace cli
     {
         [Option('t', "target", Required = true, HelpText = "Target")]
         public string Target { get; set; }
-
+        
         [Option('u', "username", Required = true, HelpText = "Username")]
         public string Username { get; set; }
 

@@ -20,16 +20,6 @@ namespace domain
             return await Task.FromResult(0);
         }
         
-        public async Task<bool> Exists(string target)
-        {
-            using (var credential = new Credential())
-            {
-                credential.Target = target;
-                credential.Type = CredentialType.Generic;
-                return await Task.FromResult(credential.Exists());
-            }
-        }
-        
         public Task<NetworkCredential> Fetch(string target)
         {
             using (var credential = new Credential())

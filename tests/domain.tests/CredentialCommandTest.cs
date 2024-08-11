@@ -20,8 +20,11 @@ namespace domain.tests
         [Test]
         public async Task TestBlueSky_StoreAndFetchCredentials()
         {
+            // setup
+            var credential = await _command.Fetch(MOCK_ENTRY);
+            
             // pre-conditions
-            Assert.That(await _command.Exists(MOCK_ENTRY), Is.False);
+            Assert.That(credential, Is.Null);
             
             // exercise
             await _command.Store(new MockStoreOption
@@ -32,7 +35,7 @@ namespace domain.tests
             });
             
             // post-conditions
-            var credential = await _command.Fetch(MOCK_ENTRY);
+            credential = await _command.Fetch(MOCK_ENTRY);
             Assert.That(credential, Is.Not.Null);
             Assert.That(credential.UserName, Is.EqualTo("mockEntryUsername"));
             Assert.That(credential.Password, Is.EqualTo("mockEntryPassword"));
