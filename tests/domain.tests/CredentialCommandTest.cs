@@ -7,35 +7,33 @@ namespace domain.tests
     public class CredentialCommandTest
     {
 
-        private const string MOCK_ENTRY = "mockEntry";
-        private CredentialCommand _command;
+        private const string MockEntry = "mockEntry";
         
         [SetUp]
         public async Task SetUp()
         {
-            _command = new CredentialCommand();
-            await _command.Delete(MOCK_ENTRY);
+            await CredentialCommand.Delete(MockEntry);
         }
         
         [Test]
         public async Task TestBlueSky_StoreAndFetchCredentials()
         {
             // setup
-            var credential = await _command.Fetch(MOCK_ENTRY);
+            var credential = await CredentialCommand.Fetch(MockEntry);
             
             // pre-conditions
             Assert.That(credential, Is.Null);
             
             // exercise
-            await _command.Store(new MockStoreOption
+            await CredentialCommand.Store(new MockStoreOption
             {
-                Target = MOCK_ENTRY,
+                Target = MockEntry,
                 Username = "mockEntryUsername",
                 Password = "mockEntryPassword"
             });
             
             // post-conditions
-            credential = await _command.Fetch(MOCK_ENTRY);
+            credential = await CredentialCommand.Fetch(MockEntry);
             Assert.That(credential, Is.Not.Null);
             Assert.That(credential.UserName, Is.EqualTo("mockEntryUsername"));
             Assert.That(credential.Password, Is.EqualTo("mockEntryPassword"));
@@ -44,7 +42,7 @@ namespace domain.tests
         [TearDown]
         public async Task TearDown()
         {
-            await _command.Delete(MOCK_ENTRY);
+            await CredentialCommand.Delete(MockEntry);
         }
         
         #region Mock Data

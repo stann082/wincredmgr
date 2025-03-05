@@ -26,12 +26,12 @@ namespace cli
 
         private static async Task<int> Delete(IOption opts)
         {
-            return await new CredentialCommand().Delete(opts.Target);
+            return await CredentialCommand.Delete(opts.Target);
         }
 
         private static async Task<int> Fetch(IOption opts)
         {
-            var credentials = await new CredentialCommand().Fetch(opts.Target);
+            var credentials = await CredentialCommand.Fetch(opts.Target);
             if (credentials == null)
             {
                 Console.WriteLine($"Target {opts.Target} does not exist");
@@ -44,7 +44,7 @@ namespace cli
 
         private static async Task<int> Store(IStoreOption opts)
         {
-            return await new CredentialCommand().Store(opts);
+            return await CredentialCommand.Store(opts);
         }
 
         #endregion

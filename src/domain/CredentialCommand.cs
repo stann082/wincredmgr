@@ -4,12 +4,12 @@ using CredentialManagement;
 
 namespace domain
 {
-    public class CredentialCommand
+    public static class CredentialCommand
     {
         
         #region Public Methods
 
-        public async Task<int> Delete(string target)
+        public static async Task<int> Delete(string target)
         {
             using (var credential = new Credential())
             {
@@ -20,7 +20,7 @@ namespace domain
             return await Task.FromResult(0);
         }
         
-        public Task<NetworkCredential> Fetch(string target)
+        public static Task<NetworkCredential> Fetch(string target)
         {
             using (var credential = new Credential())
             {
@@ -31,7 +31,7 @@ namespace domain
             }
         }
         
-        public async Task<int> Store(IStoreOption opts)
+        public static async Task<int> Store(IStoreOption opts)
         {
             using (var credential = new Credential())
             {
