@@ -4,11 +4,16 @@ using domain;
 namespace cli
 {
     [Verb("fetch", HelpText = "Fetch credentials from Windows Credential Manager.")]
-    public class FetchOption : IOption
+    public class FetchOption : IFetchOption
     {
         
-        [Option('t', "target", Required = true, HelpText = "Target")]
+        [Option('t', "target", HelpText = "Target")]
         public string Target { get; set; }
         
+        [Option('u', "username", HelpText = "Username")]
+        public bool Username { get; set; }
+
+        [Option('p', "password", HelpText = "Password")]
+        public bool Password { get; set; }
     }
 }

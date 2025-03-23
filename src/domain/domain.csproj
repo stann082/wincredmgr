@@ -42,6 +42,7 @@
         <Reference Include="System.Xml"/>
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="IFetchOption.cs" />
         <Compile Include="IOption.cs" />
         <Compile Include="IStoreOption.cs" />
         <Compile Include="Properties\AssemblyInfo.cs"/>
