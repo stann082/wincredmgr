@@ -33,7 +33,7 @@ namespace cli
         {
             if (string.IsNullOrWhiteSpace(opts.Target))
             {
-                var targets = await CredentialCommand.FetchAll();
+                var targets = await CredentialCommand.FetchAll(opts.All);
                 foreach (var target in targets)
                 {
                     Console.WriteLine(target.Replace($"{CredentialCommand.UserSecretsSuffix}", string.Empty));

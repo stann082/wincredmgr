@@ -20,7 +20,7 @@ namespace domain
         {
             using (var credential = new Credential())
             {
-                credential.Target = target;
+                credential.Target = GetTargetWithSuffix(target);
                 credential.Delete();
             }
 
@@ -38,13 +38,14 @@ namespace domain
             }
         }
 
-        public static Task<string[]> FetchAll()
+        public static Task<string[]> FetchAll(bool all = false)
         {
             using (var credentials = new CredentialSet())
             {
                 credentials.Load();
                 return Task.FromResult(credentials
-                    .Select(c => GetTargetWithSuffix(c.Target))
+                    .Where(c => all || c.Target.Contains(UserSecretsSuffix))
+                    .Select(c => c.Target)
                     .OrderBy(c => c)
                     .ToArray());
             }

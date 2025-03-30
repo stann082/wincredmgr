@@ -7,6 +7,9 @@ namespace cli
     public class FetchOption : IFetchOption
     {
         
+        [Option('a', "all", HelpText = "Fetches all secrets (by default only the ones created by user)")]
+        public bool All { get; set; }
+        
         [Option('t', "target", HelpText = "Target")]
         public string Target { get; set; }
         
