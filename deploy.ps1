@@ -2,9 +2,9 @@ remove-item .\pub\ -recurse -erroraction silentlycontinue
 MSBuild .\src\cli\cli.csproj /p:Configuration=Release /p:OutputPath="..\..\build\release\" `
     /p:Platform="Any CPU" /p:PublishDir="..\..\pub" /t:Publish /v:minimal
 
-move-item '.\pub\Application Files\cli_1_0_0_0\cli.exe' '.\pub\Application Files\cli_1_0_0_0\CredManager.exe' -verbose
+move-item '.\pub\cli.exe' '.\pub\CredManager.exe' -verbose
 remove-item $env:APPDATA\utils\cli_1_0_0_0 -recurse -erroraction silentlycontinue
-copy-item '.\pub\Application Files\cli_1_0_0_0' -recurse $env:APPDATA\utils -verbose
+copy-item '.\pub' "$env:APPDATA\utils\cli_1_0_0_0" -recurse -verbose
 
 $batchScript = @'
 @echo off
