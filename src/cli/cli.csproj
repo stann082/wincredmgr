@@ -49,6 +49,7 @@
         <Compile Include="Program.cs"/>
         <Compile Include="Properties\AssemblyInfo.cs"/>
         <Compile Include="StoreOption.cs" />
+        <Compile Include="UsageText.cs" />
     </ItemGroup>
     <ItemGroup>
       <None Include="packages.config" />

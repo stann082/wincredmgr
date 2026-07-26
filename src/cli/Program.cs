@@ -1,6 +1,9 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using CommandLine;
+using CommandLine.Text;
 using domain;
 
 namespace cli
@@ -12,12 +15,23 @@ namespace cli
 
         public static async Task<int> Main(string[] args)
         {
-            return await Parser.Default.ParseArguments<StoreOption, FetchOption, DeleteOption>(args)
-                .MapResult(
-                    async (StoreOption opts) => await Store(opts),
-                    async (FetchOption opts) => await Fetch(opts),
-                    async (DeleteOption opts) => await Delete(opts),
-                    _ => Task.FromResult(1));
+            if (UsageText.IsTopLevelHelpRequest(args))
+            {
+                Console.WriteLine(UsageText.Render());
+                return 0;
+            }
+
+            // The parser only understands "--help"; HelpWriter is disabled so that requested help
+            // goes to stdout and genuine parse errors go to stderr.
+            var parser = new Parser(with => with.HelpWriter = null);
+            var result = parser.ParseArguments<StoreOption, FetchOption, DeleteOption>(
+                UsageText.NormalizeVerbHelpFlag(args));
+
+            return await result.MapResult(
+                async (StoreOption opts) => await Store(opts),
+                async (FetchOption opts) => await Fetch(opts),
+                async (DeleteOption opts) => await Delete(opts),
+                errs => Task.FromResult(HandleParseErrors(result, errs)));
         }
 
         #endregion
@@ -38,10 +52,10 @@ namespace cli
                 {
                     Console.WriteLine(target.Replace($"{CredentialCommand.UserSecretsSuffix}", string.Empty));
                 }
-                
+
                 return 0;
             }
-            
+
             var credentials = await CredentialCommand.Fetch(opts.Target);
             if (credentials == null)
             {
@@ -60,9 +74,32 @@ namespace cli
                 Console.WriteLine($"{credentials.UserName}");
                 return 0;
             }
-            
+
             Console.WriteLine($"{credentials.UserName} {credentials.Password}");
             return await Task.FromResult(0);
+        }
+
+        private static int HandleParseErrors(ParserResult<object> result, IEnumerable<Error> errors)
+        {
+            var errorList = errors.ToList();
+            var helpRequested = errorList.Any(e => e.Tag == ErrorType.HelpRequestedError
+                                                   || e.Tag == ErrorType.HelpVerbRequestedError
+                                                   || e.Tag == ErrorType.VersionRequestedError);
+
+            var helpText = HelpText.AutoBuild(result, h =>
+            {
+                h.AdditionalNewLineAfterOption = false;
+                return HelpText.DefaultParsingErrorsHandler(result, h);
+            }, e => e);
+
+            if (helpRequested)
+            {
+                Console.WriteLine(helpText);
+                return 0;
+            }
+
+            Console.Error.WriteLine(helpText);
+            return 1;
         }
 
         private static async Task<int> Store(IStoreOption opts)
