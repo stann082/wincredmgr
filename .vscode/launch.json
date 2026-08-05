@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": ".NET Launch (fetch)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/src/cli/bin/Debug/net10.0/cli.dll",
+            "args": [
+                "fetch"
+            ],
+            "cwd": "${workspaceFolder}/src/cli",
+            "console": "integratedTerminal",
+            "stopAtEntry": false
+        }
+    ]
+}
